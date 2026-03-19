@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eid Mubarak</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold:       #C9A84C;
+      --gold-light: #E8CC7A;
+      --gold-pale:  #F5E9C0;
+      --emerald:    #0D3D2B;
+      --emerald-mid:#145C3F;
+      --emerald-lt: #1A7A52;
+      --cream:      #FAF3E0;
+      --ink:        #1A1208;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--emerald);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Geometric tile background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          60deg,
+          transparent,
+          transparent 28px,
+          rgba(201,168,76,.07) 28px,
+          rgba(201,168,76,.07) 29px
+        ),
+        repeating-linear-gradient(
+          -60deg,
+          transparent,
+          transparent 28px,
+          rgba(201,168,76,.07) 28px,
+          rgba(201,168,76,.07) 29px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 28px,
+          rgba(201,168,76,.05) 28px,
+          rgba(201,168,76,.05) 29px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Radial glow centre ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80vw;
+      height: 80vw;
+      max-width: 700px;
+      max-height: 700px;
+      background: radial-gradient(ellipse at center,
+        rgba(201,168,76,.18) 0%,
+        rgba(20,92,63,.0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Wrapper ── */
+    #app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ────────────────────────────
+       WELCOME SCREEN
+    ──────────────────────────── */
+    #welcome {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: center;
+      gap: 1.2rem;
+      animation: fadeUp .9s ease both;
+    }
+
+    .crescent-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin-bottom: .4rem;
+    }
+
+    .crescent-wrap svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 18px rgba(201,168,76,.55));
+      animation: floatMoon 4s ease-in-out infinite;
+    }
+
+    @keyframes floatMoon {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    .star-ring {
+      position: absolute;
+      inset: -14px;
+      animation: spinSlow 30s linear infinite;
+    }
+
+    .star-ring .dot {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      opacity: .7;
+    }
+
+    .tagline-top {
+      font-family: 'Amiri', serif;
+      font-size: clamp(.9rem, 2vw, 1.1rem);
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeUp .7s .4s ease forwards;
+    }
+
+    h1.main-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(2.6rem, 9vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, #A07830 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 18px rgba(201,168,76,.3));
+      opacity: 0;
+      animation: fadeUp .8s .15s ease forwards;
+    }
+
+    .divider-ornament {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      opacity: 0;
+      animation: fadeUp .7s .5s ease forwards;
+    }
+    .divider-ornament span.line {
+      display: block;
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .divider-ornament span.diamond {
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    .welcome-sub {
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-style: italic;
+      color: var(--gold-pale);
+      max-width: 500px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp .7s .65s ease forwards;
+    }
+
+    .arabic-greeting {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      color: var(--gold-light);
+      direction: rtl;
+      opacity: 0;
+      animation: fadeUp .7s .8s ease forwards;
+    }
+
+    .btn-primary {
+      margin-top: .6rem;
+      padding: .85rem 2.6rem;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      color: var(--emerald);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      border: none;
+      cursor: pointer;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 28px rgba(201,168,76,.35);
+      transition: transform .2s, box-shadow .2s;
+      opacity: 0;
+      animation: fadeUp .7s 1s ease forwards;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.25), transparent);
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 36px rgba(201,168,76,.5); }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ────────────────────────────
+       SUNNAHS SCREEN
+    ──────────────────────────── */
+    #sunnahs {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    #sunnahs.active {
+      display: flex;
+    }
+
+    .screen-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeUp .7s ease both;
+    }
+    .screen-header .label {
+      font-family: 'Amiri', serif;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      font-size: .85rem;
+      color: var(--gold);
+      margin-bottom: .5rem;
+    }
+    .screen-header h2 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.5rem, 5vw, 2.6rem);
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Card carousel */
+    .carousel {
+      width: 100%;
+      max-width: 680px;
+      position: relative;
+    }
+
+    .card-track {
+      position: relative;
+      width: 100%;
+    }
+
+    .sunnah-card {
+      display: none;
+      flex-direction: column;
+      background: linear-gradient(160deg, rgba(20,92,63,.55) 0%, rgba(13,61,43,.85) 100%);
+      border: 1px solid rgba(201,168,76,.25);
+      border-radius: 6px;
+      padding: 2.5rem 2.2rem 2rem;
+      box-shadow:
+        0 0 0 1px rgba(201,168,76,.08),
+        0 20px 60px rgba(0,0,0,.4),
+        inset 0 1px 0 rgba(201,168,76,.15);
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+      animation: cardIn .5s ease both;
+    }
+    .sunnah-card.active { display: flex; }
+
+    /* Corner ornaments on card */
+    .sunnah-card::before,
+    .sunnah-card::after {
+      content: '';
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-color: rgba(201,168,76,.3);
+      border-style: solid;
+    }
+    .sunnah-card::before {
+      top: 12px; left: 12px;
+      border-width: 1px 0 0 1px;
+    }
+    .sunnah-card::after {
+      bottom: 12px; right: 12px;
+      border-width: 0 1px 1px 0;
+    }
+
+    .card-number {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: .7rem;
+      letter-spacing: .25em;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+      opacity: .8;
+    }
+
+    .card-icon {
+      font-size: 2.8rem;
+      margin-bottom: .8rem;
+      display: block;
+      filter: drop-shadow(0 0 10px rgba(201,168,76,.4));
+    }
+
+    .card-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: var(--gold-light);
+      margin-bottom: .5rem;
+      line-height: 1.3;
+    }
+
+    .card-arabic {
+      font-family: 'Amiri', serif;
+      font-size: 1.3rem;
+      direction: rtl;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      line-height: 1.8;
+      opacity: .9;
+    }
+
+    .card-body {
+      font-size: clamp(.95rem, 2vw, 1.1rem);
+      line-height: 1.85;
+      color: rgba(250,243,224,.85);
+      margin-bottom: 1.2rem;
+    }
+
+    .card-hadith {
+      border-left: 2px solid var(--gold);
+      padding-left: 1rem;
+      font-style: italic;
+      font-size: .9rem;
+      color: rgba(250,243,224,.6);
+      line-height: 1.7;
+    }
+
+    /* Nav controls */
+    .card-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .btn-nav {
+      padding: .7rem 1.8rem;
+      font-family: 'Amiri', serif;
+      font-size: 1rem;
+      letter-spacing: .05em;
+      background: transparent;
+      border: 1px solid rgba(201,168,76,.4);
+      color: var(--gold-light);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background .2s, border-color .2s, transform .15s;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .btn-nav:hover {
+      background: rgba(201,168,76,.12);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+    .btn-nav:disabled {
+      opacity: .25;
+      cursor: default;
+      transform: none;
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: .55rem;
+      align-items: center;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(201,168,76,.3);
+      transition: background .3s, transform .3s;
+      cursor: pointer;
+    }
+    .dot.active {
+      background: var(--gold);
+      transform: scale(1.35);
+    }
+
+    /* Back to welcome */
+    .btn-back {
+      margin-top: 2.5rem;
+      background: none;
+      border: none;
+      color: rgba(201,168,76,.55);
+      font-family: 'Amiri', serif;
+      font-size: .9rem;
+      letter-spacing: .1em;
+      cursor: pointer;
+      transition: color .2s;
+    }
+    .btn-back:hover { color: var(--gold); }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(16px) scale(.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg);   }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .sunnah-card { padding: 1.8rem 1.4rem 1.6rem; }
+      .btn-nav { padding: .6rem 1.2rem; font-size: .9rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── WELCOME SCREEN ── -->
+  <section id="welcome">
+
+    <!-- Animated crescent + star ring -->
+    <div class="crescent-wrap">
+      <!-- Orbiting dots -->
+      <div class="star-ring" id="starRing"></div>
+      <!-- Crescent SVG -->
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cg" cx="40%" cy="40%" r="60%">
+            <stop offset="0%"   stop-color="#E8CC7A"/>
+            <stop offset="100%" stop-color="#9A6F20"/>
+          </radialGradient>
+        </defs>
+        <!-- Crescent -->
+        <path d="M50 10 A40 40 0 1 1 50 90 A28 28 0 1 0 50 10Z"
+              fill="url(#cg)"
+              filter="url(#glow)"/>
+        <!-- Star -->
+        <polygon points="72,28 74.5,35 82,35 76,39.5 78.5,47 72,42.5 65.5,47 68,39.5 62,35 69.5,35"
+                 fill="#E8CC7A" opacity=".9"/>
+        <defs>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+      </svg>
+    </div>
+
+    <p class="tagline-top">✦ &nbsp; Eid Al-Fitr &nbsp; ✦</p>
+
+    <h1 class="main-title">Eid Mubarak</h1>
+
+    <div class="divider-ornament">
+      <span class="line"></span>
+      <span class="diamond"></span>
+      <span class="line"></span>
+    </div>
+
+    <p class="arabic-greeting">عيد مبارك وكل عام وأنتم بخير</p>
+
+    <p class="welcome-sub">
+      May Allah accept your fasting, prayers &amp; good deeds.<br/>
+      Explore the beautiful Sunnahs of this blessed day.
+    </p>
+
+    <button class="btn-primary" onclick="showSunnahs()">
+      Explore the Sunnahs &nbsp;✦
+    </button>
+  </section>
+
+  <!-- ── SUNNAHS SCREEN ── -->
+  <section id="sunnahs">
+    <div class="screen-header">
+      <p class="label">✦ &nbsp; Prophetic Traditions &nbsp; ✦</p>
+      <h2>Sunnahs of Eid</h2>
+    </div>
+
+    <div class="carousel">
+      <div class="card-track" id="cardTrack"></div>
+    </div>
+
+    <div class="card-nav">
+      <button class="btn-nav" id="btnPrev" onclick="navigate(-1)">← Previous</button>
+      <div class="progress-dots" id="dots"></div>
+      <button class="btn-nav" id="btnNext" onclick="navigate(1)">Next →</button>
+    </div>
+
+    <button class="btn-back" onclick="showWelcome()">↩ &nbsp; Back to greeting</button>
+  </section>
+
+</div>
+
+<script>
+  const sunnahs = [
+    {
+      icon: "🌙",
+      title: "Perform the Ghusl",
+      arabic: "الغسل قبل صلاة العيد",
+      body: "It is a Sunnah to perform a full ritual bath (Ghusl) on the morning of Eid before heading to the prayer. This is a sign of purification and readiness for this blessed occasion.",
+      hadith: "Ibn 'Umar (RA) used to perform Ghusl on the day of Eid al-Fitr before going out to the prayer. — Al-Muwatta"
+    },
+    {
+      icon: "🌟",
+      title: "Say the Takbeer",
+      arabic: "الله أكبر الله أكبر، لا إله إلا الله",
+      body: "Recite the Takbeer from the night of Eid until the imam begins the prayer. Fill the streets and homes with the remembrance of Allah on this joyous day.",
+      hadith: "Allahu Akbar, Allahu Akbar, La ilaha ill-Allah, Allahu Akbar, Allahu Akbar, wa Lillahi'l-hamd."
+    },
+    {
+      icon: "🍬",
+      title: "Eat Before the Prayer",
+      arabic: "الأكل قبل صلاة عيد الفطر",
+      body: "On Eid al-Fitr, eat an odd number of dates — ideally three, five or seven — before leaving for the Eid prayer, continuing the fast of Ramadan until that moment and then breaking it.",
+      hadith: "The Prophet ﷺ would not go out on the morning of Eid al-Fitr until he had eaten some dates... and he would eat an odd number. — Al-Bukhari"
+    },
+    {
+      icon: "👘",
+      title: "Wear Your Best Clothes",
+      arabic: "التجمّل ولبس أحسن الثياب",
+      body: "Adorn yourself in your finest, cleanest garments for Eid. It is recommended to wear new clothing if possible, and for men to use attar (perfume) as a mark of celebration and gratitude.",
+      hadith: "'Umar (RA) brought a silk cloak to the Prophet ﷺ to wear on Eid and Fridays. — Al-Bukhari"
+    },
+    {
+      icon: "🛤️",
+      title: "Take Different Routes",
+      arabic: "مخالفة الطريق ذهابًا وإيابًا",
+      body: "Walk to the Eid prayer by one route and return home by a different route. Among the wisdoms: to witness more of the community, to greet more believers, and to have more ground testify for you on the Day of Judgement.",
+      hadith: "The Prophet ﷺ used to change his route on the day of Eid. — Al-Bukhari"
+    },
+    {
+      icon: "🤲",
+      title: "Congratulate One Another",
+      arabic: "تقبّل الله منّا ومنكم",
+      body: "Exchange warm Eid greetings with family, friends and neighbours. The beloved companions of the Prophet ﷺ would greet each other with these blessed words on the day of Eid.",
+      hadith: "Taqabbal Allahu minna wa minkum — 'May Allah accept [good deeds] from us and from you.' — Reported from the Companions"
+    },
+    {
+      icon: "🕌",
+      title: "Attend the Eid Prayer",
+      arabic: "صلاة العيد في الصحراء أو المصلّى",
+      body: "Attend the Eid prayer in congregation. The Prophet ﷺ would go to an open ground (musalla) for the prayer and encouraged all — including women and children — to attend and share in the joy of the day.",
+      hadith: "The Prophet ﷺ commanded us to bring out to the Eid prayer the virgins, menstruating women and secluded women, so they could witness the good and the supplications of the believers. — Al-Bukhari"
+    }
+  ];
+
+  let current = 0;
+
+  function buildCards() {
+    const track = document.getElementById('cardTrack');
+    const dotsEl = document.getElementById('dots');
+    track.innerHTML = '';
+    dotsEl.innerHTML = '';
+
+    sunnahs.forEach((s, i) => {
+      // Card
+      const card = document.createElement('div');
+      card.className = 'sunnah-card' + (i === 0 ? ' active' : '');
+      card.innerHTML = `
+        <span class="card-number">Sunnah ${String(i+1).padStart(2,'0')} / ${String(sunnahs.length).padStart(2,'0')}</span>
+        <span class="card-icon">${s.icon}</span>
+        <h3 class="card-title">${s.title}</h3>
+        <p class="card-arabic">${s.arabic}</p>
+        <p class="card-body">${s.body}</p>
+        <p class="card-hadith">${s.hadith}</p>
+      `;
+      track.appendChild(card);
+
+      // Dot
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.onclick = () => goTo(i);
+      dotsEl.appendChild(dot);
+    });
+
+    updateNav();
+  }
+
+  function goTo(n) {
+    const cards = document.querySelectorAll('.sunnah-card');
+    const dots  = document.querySelectorAll('.dot');
+    cards[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = n;
+    cards[current].classList.add('active');
+    dots[current].classList.add('active');
+    updateNav();
+  }
+
+  function navigate(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < sunnahs.length) goTo(next);
+  }
+
+  function updateNav() {
+    document.getElementById('btnPrev').disabled = current === 0;
+    document.getElementById('btnNext').disabled = current === sunnahs.length - 1;
+  }
+
+  function showSunnahs() {
+    document.getElementById('welcome').style.display = 'none';
+    const s = document.getElementById('sunnahs');
+    s.classList.add('active');
+    buildCards();
+    // Reset
+    current = 0;
+  }
+
+  function showWelcome() {
+    document.getElementById('sunnahs').classList.remove('active');
+    document.getElementById('welcome').style.display = 'flex';
+  }
+
+  // Build orbiting dots on crescent
+  (function buildRing() {
+    const ring = document.getElementById('starRing');
+    const count = 8;
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      const angle = (i / count) * 360;
+      const rad   = (angle * Math.PI) / 180;
+      const r     = 62; // px from centre of 110px container
+      const cx    = 55 + r * Math.cos(rad) - 2.5;
+      const cy    = 55 + r * Math.sin(rad) - 2.5;
+      dot.style.cssText = `left:${cx}px;top:${cy}px;opacity:${.3 + .5*(i%3)/2}`;
+      ring.appendChild(dot);
+    }
+  })();
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('sunnahs').classList.contains('active')) return;
+    if (e.key === 'ArrowRight') navigate(1);
+    if (e.key === 'ArrowLeft')  navigate(-1);
+    if (e.key === 'Escape')     showWelcome();
+  });
+</script>
+</body>
+</html>
